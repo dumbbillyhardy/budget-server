@@ -1,23 +1,12 @@
 package account
 
 import (
-	"fmt"
-
 	o "github.com/dumbbillyhardy/budget-server/objects"
 )
 
 // InMemory version of Service.
 type InMemory struct {
 	Accounts []o.Account
-}
-
-// NotFoundError that will be mapped to 404
-type NotFoundError struct {
-	Message string
-}
-
-func (e *NotFoundError) Error() string {
-	return fmt.Sprintf(e.Message)
 }
 
 // GetByID the Account.
@@ -27,7 +16,7 @@ func (in_mem *InMemory) GetByID(id string) (*o.Account, error) {
 			return &Account, nil
 		}
 	}
-	return nil, &NotFoundError{"Not Found"}
+	return nil, &o.NotFoundError{Message: "Not Found"}
 }
 
 // Save the Account.
@@ -45,7 +34,7 @@ func (in_mem *InMemory) Update(Account o.Account) (*o.Account, error) {
 		}
 	}
 	if index == -1 {
-		return nil, &NotFoundError{"Not found"}
+		return nil, &o.NotFoundError{Message: "Not found"}
 	}
 	in_mem.Accounts[index] = Account
 	return &Account, nil
@@ -60,7 +49,7 @@ func (in_mem *InMemory) Delete(id string) error {
 		}
 	}
 	if index == -1 {
-		return &NotFoundError{"Not found"}
+		return &o.NotFoundError{Message: "Not found"}
 	}
 	end := len(in_mem.Accounts) - 1
 	in_mem.Accounts[index] = in_mem.Accounts[end]

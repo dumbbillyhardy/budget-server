@@ -1,23 +1,12 @@
 package budget
 
 import (
-	"fmt"
-
 	o "github.com/dumbbillyhardy/budget-server/objects"
 )
 
 // InMemory version of Service.
 type InMemory struct {
 	Budgets []o.Budget
-}
-
-// NotFoundError that will be mapped to 404
-type NotFoundError struct {
-	Message string
-}
-
-func (e *NotFoundError) Error() string {
-	return fmt.Sprintf(e.Message)
 }
 
 // GetByID the budget.
@@ -27,7 +16,7 @@ func (in_mem *InMemory) GetByID(id string) (*o.Budget, error) {
 			return &budget, nil
 		}
 	}
-	return nil, &NotFoundError{"Not Found"}
+	return nil, &o.NotFoundError{Message: "Not Found"}
 }
 
 // Save the budget.
@@ -45,7 +34,7 @@ func (in_mem *InMemory) Update(budget o.Budget) (*o.Budget, error) {
 		}
 	}
 	if index == -1 {
-		return nil, &NotFoundError{"Not found"}
+		return nil, &o.NotFoundError{Message: "Not found"}
 	}
 	in_mem.Budgets[index] = budget
 	return &budget, nil
@@ -60,7 +49,7 @@ func (in_mem *InMemory) Delete(id string) error {
 		}
 	}
 	if index == -1 {
-		return &NotFoundError{"Not found"}
+		return &o.NotFoundError{Message: "Not found"}
 	}
 	end := len(in_mem.Budgets) - 1
 	in_mem.Budgets[index] = in_mem.Budgets[end]

@@ -1,23 +1,12 @@
 package transaction
 
 import (
-	"fmt"
-
 	o "github.com/dumbbillyhardy/budget-server/objects"
 )
 
 // InMemory version of Service.
 type InMemory struct {
 	Transactions []o.Transaction
-}
-
-// NotFoundError that will be mapped to 404
-type NotFoundError struct {
-	Message string
-}
-
-func (e *NotFoundError) Error() string {
-	return fmt.Sprintf(e.Message)
 }
 
 // GetByID the Transaction.
@@ -27,7 +16,7 @@ func (in_mem *InMemory) GetByID(id string) (*o.Transaction, error) {
 			return &Transaction, nil
 		}
 	}
-	return nil, &NotFoundError{"Not Found"}
+	return nil, &o.NotFoundError{Message: "Not Found"}
 }
 
 // Save the Transaction.
@@ -45,7 +34,7 @@ func (in_mem *InMemory) Update(Transaction o.Transaction) (*o.Transaction, error
 		}
 	}
 	if index == -1 {
-		return nil, &NotFoundError{"Not found"}
+		return nil, &o.NotFoundError{Message: "Not found"}
 	}
 	in_mem.Transactions[index] = Transaction
 	return &Transaction, nil
@@ -60,7 +49,7 @@ func (in_mem *InMemory) Delete(id string) error {
 		}
 	}
 	if index == -1 {
-		return &NotFoundError{"Not found"}
+		return &o.NotFoundError{Message: "Not found"}
 	}
 	end := len(in_mem.Transactions) - 1
 	in_mem.Transactions[index] = in_mem.Transactions[end]

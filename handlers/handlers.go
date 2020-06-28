@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/dumbbillyhardy/budget-server/objects"
+
 	context "github.com/dumbbillyhardy/budget-server/context"
 )
 
@@ -16,7 +18,11 @@ type Handler func(http.ResponseWriter, *http.Request) error
 func ErrorHandler(f Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := f(w, r); err != nil {
-			ServeContent(w, r, err.Error(), http.StatusInternalServerError)
+			if _, t := err.(*objects.NotFoundError); t {
+				ServeContent(w, r, err.Error(), http.StatusNotFound)
+			} else {
+				ServeContent(w, r, err.Error(), http.StatusInternalServerError)
+			}
 		}
 	}
 }
