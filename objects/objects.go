@@ -4,8 +4,6 @@ package objects
 type Budget struct {
 	ID         string
 	Name       string
-	FirstMonth string
-	LastMonth  string
 	Accounts   []Account
 }
 
@@ -20,38 +18,45 @@ type Account struct {
 	Closed           bool
 }
 
-// CategoryGroup groups categories
-type CategoryGroup struct {
-	BudgetID   string
-	ID         string
-	Name       string
-	Categories []Category
-}
-
 // Category for transactions
 type Category struct {
 	BudgetID string
 	ID       string
 	Name     string
-	GroupID  string
-	Budgeted int64
-	Activity int64
-	Balance  int64
+	Group    string
 }
 
 // Transaction you know
 type Transaction struct {
-	BudgetID     string
-	ID           string
-	AccountID    string
-	AccountName  string
-	Date         string
-	Amount       int64
-	PayeeID      string
-	PayeeName    string
-	CategoryID   string
-	CategoryName string
-	Memo         string
-	Cleared      bool
-	Approved     bool
+	BudgetID    string
+	ID          string
+	Date        string
+	Payee       string
+	Memo        string
+	Cleared     bool
+	Approved    bool
+}
+
+type SubTransaction interface {
+	ID() string
+	AccountID   string
+	Amount() int64
+	CategoryID  string
+}
+
+type CategoryTransfer struct {
+    TransactionID string
+	AccountID   string
+
+    FromCategoryID string
+}
+
+type AccountTransfer struct {
+    TransactionID string
+    FromAccountID string
+}
+
+type PaymentTransaction struct {
+    TransactionID string
+    FromCategoryID string
 }
